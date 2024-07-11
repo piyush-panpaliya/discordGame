@@ -1,11 +1,11 @@
 import { Scene } from "phaser";
-
+import { discordSdk } from "../utils/discordSDK";
 export class MainMenu extends Scene {
   constructor() {
     super("MainMenu");
   }
 
-  create() {
+  async create() {
     const bg = this.add.image(
       this.cameras.main.width / 2,
       this.cameras.main.height / 2,
@@ -18,8 +18,8 @@ export class MainMenu extends Scene {
 
     this.add.image(Number(this.game.config.width) * 0.5, 300, "logo");
 
-    this.add
-      .text(Number(this.game.config.width) * 0.5, 460, "Main Menu", {
+    const start = this.add
+      .text(Number(this.game.config.width) * 0.5, 460, "Start", {
         fontFamily: "Arial Black",
         fontSize: 38,
         color: "#ffffff",
@@ -27,10 +27,13 @@ export class MainMenu extends Scene {
         strokeThickness: 8,
         align: "center",
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5).setInteractive({
+        cursor: "pointer",
+      }).on("pointerdown", async () => {
+        // await discordSdk.authenticate();
+        this.scene.start("Game");
+      })
 
-    this.input.once("pointerdown", () => {
-      this.scene.start("Game");
-    });
+
   }
 }

@@ -7,12 +7,9 @@ let discordSdk: DiscordSDK | DiscordSDKMock;
 
 const initiateDiscordSDK = async () => {
   if (isEmbedded) {
+    // @ts-ignore
     discordSdk = new DiscordSDK(import.meta.env.VITE_CLIENT_ID);
   } else {
-    // We're using session storage for user_id, guild_id, and channel_id
-    // This way the user/guild/channel will be maintained until the tab is closed, even if you refresh
-    // Session storage will generate new unique mocks for each tab you open
-    // Any of these values can be overridden via query parameters
     // i.e. if you set https://my-tunnel-url.com/?user_id=test_user_id
     // this will override this will override the session user_id value
     const mockUserId = getOverrideOrRandomSessionValue("user_id");
@@ -20,6 +17,7 @@ const initiateDiscordSDK = async () => {
     const mockChannelId = getOverrideOrRandomSessionValue("channel_id");
 
     discordSdk = new DiscordSDKMock(
+      // @ts-ignore
       import.meta.env.VITE_CLIENT_ID,
       mockGuildId,
       mockChannelId
